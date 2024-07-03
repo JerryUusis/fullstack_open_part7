@@ -1,10 +1,11 @@
-import { useState } from "react";
 import Togglable from "./Togglable";
 import { useRef } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { handleBlogLikes } from "../store/blogsSlice";
 
 const Blog = ({ blog, handleDelete, currentUser, handleUpdate }) => {
-  const [blogLikes, setBlogLikes] = useState(blog.likes);
+  const dispatch = useDispatch();
   const blogRef = useRef();
   const blogStyle = {
     paddingTop: 10,
@@ -17,12 +18,12 @@ const Blog = ({ blog, handleDelete, currentUser, handleUpdate }) => {
   Blog.propTypes = {
     blog: PropTypes.object.isRequired,
     handleDelete: PropTypes.func.isRequired,
-    currentUser: PropTypes.string.isRequired
+    currentUser: PropTypes.string.isRequired,
   };
 
   const updateBlog = async () => {
     try {
-      const newLikes = blogLikes + 1;
+      const newLikes = blog.likes + 1;
       const updatedBlog = {
         id: blog.id,
         user: blog.user.id,
@@ -32,7 +33,7 @@ const Blog = ({ blog, handleDelete, currentUser, handleUpdate }) => {
         url: blog.url,
       };
       handleUpdate(updatedBlog);
-      setBlogLikes(newLikes);
+      dispatch(handleBlogLikes(blog.id));
     } catch (error) {
       console.error(error);
     }
@@ -54,7 +55,10 @@ const Blog = ({ blog, handleDelete, currentUser, handleUpdate }) => {
       <Togglable openLabel="view" closeLabel="hide" ref={blogRef}>
         <p>{blog.url}</p>
         <div data-testid={"blog-likes-div"}>
-          likes <span data-testid={"blog-likes"}>{blogLikes}</span> <button onClick={updateBlog} data-testid={"blog-like-button"}>like</button>
+          likes <span data-testid={"blog-likes"}>{blog.likes}</span>{" "}
+          <button onClick={updateBlog} data-testid={"blog-like-button"}>
+            like
+          </button>
         </div>
         <p>{blog.author}</p>
         {currentUser === blog.user.username ? (

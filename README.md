@@ -9,3 +9,4 @@
 ## [Exercises 7.4.-7.8.](https://fullstackopen.com/osa7/custom_hookit#tehtavat-7-4-7-8)
 
 - 7.4: anekdoottisovellus ja hookit step1 ✅
+- 7.5: anekdoottisovellus ja hookit step2 ✅

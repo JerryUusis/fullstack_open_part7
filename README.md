@@ -13,3 +13,7 @@
 - 7.6: anekdoottisovellus ja hookit step3 ✅
 - 7.7: country hook ✅
 - 7.8: ultimate hooks ✅
+
+## [Exercises 7.9.-7.21](https://fullstackopen.com/osa7/tehtavia_blogilistan_laajennus#tehtavat-7-9-7-21)
+
+- 7.9: koodin automaattinen muotoilu ✅

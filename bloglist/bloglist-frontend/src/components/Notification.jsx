@@ -1,16 +1,11 @@
-import PropTypes from "prop-types";
 
-const Notification = ({ errorMessage, severity }) => {
+import { useSelector } from "react-redux";
 
-  Notification.propTypes = {
-    errorMessage: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.oneOf([null])
-    ]),
-    severity: PropTypes.string.isRequired
-  };
+const Notification = () => {
+  const errorMessage = useSelector((state) => state.notification.message);
+  const severity = useSelector((state) => state.notification.severity);
 
-  if (errorMessage === null) {
+  if (errorMessage === "") {
     return null;
   }
 

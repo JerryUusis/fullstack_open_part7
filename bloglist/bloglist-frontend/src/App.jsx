@@ -6,13 +6,15 @@ import LoginForm from "./components/LoginForm";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotification } from "./store/notificationSlice";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [severity, setSeverity] = useState("");
+  const errorMessage = useSelector((state) => state.notification.message);
 
+  const dispatch = useDispatch();
   const blogFormRef = useRef();
 
   // Fetch blogs and save in the blogs state
@@ -40,10 +42,11 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setErrorMessage(null);
+    const timer = setTimeout(() => {
+      dispatch(setNotification({ message: "", severity: "" }));
     }, 3000);
-  }, [errorMessage]);
+    return () => clearTimeout(timer);
+  }, [dispatch, errorMessage]);
 
   const handleLogin = async (username, password) => {
     try {
@@ -52,28 +55,31 @@ const App = () => {
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       setUser(user);
     } catch (error) {
-      handleNotification("Login failed", "error");
+      dispatch(setNotification({ severity: "error", message: "Login failed" }));
       console.error(error);
     }
-  };
-
-  const handleNotification = (message, severity) => {
-    setErrorMessage(message);
-    setSeverity(severity);
   };
 
   const handleNewBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility();
       await blogService.create(newBlog);
-      handleNotification(
-        `a new blog ${newBlog.title} added succesfully`,
-        "success"
+
+      dispatch(
+        setNotification({
+          message: `a new blog ${newBlog.title} added succesfully`,
+          severity: "success",
+        })
       );
       await fetchData();
     } catch (error) {
       console.error(error);
-      handleNotification("Adding new blog failed", "error");
+      dispatch(
+        setNotification({
+          message: "Adding new blog failed",
+          severity: "error",
+        })
+      );
     }
   };
 
@@ -90,8 +96,7 @@ const App = () => {
   const handleUpdate = async (updatedBlog) => {
     try {
       await blogService.update(updatedBlog);
-    }
-    catch(error) {
+    } catch (error) {
       console.error(error);
     }
   };
@@ -105,7 +110,7 @@ const App = () => {
     return (
       <>
         <h2>Log in to application</h2>
-        <Notification errorMessage={errorMessage} severity={severity} />
+        <Notification />
         <LoginForm handleLogin={handleLogin} />
       </>
     );
@@ -116,13 +121,18 @@ const App = () => {
       <div>
         <div>
           <h2 data-testid="blogs-header">blogs</h2>
-          <Notification errorMessage={errorMessage} severity={severity} />
+          <Notification />
         </div>
         <div>
           {user.username} logged in
           <button onClick={handleLogout}>Logout</button>
         </div>
-        <Togglable data-testid="blog-form-togglable" openLabel="new blog" closeLabel="cancel" ref={blogFormRef}>
+        <Togglable
+          data-testid="blog-form-togglable"
+          openLabel="new blog"
+          closeLabel="cancel"
+          ref={blogFormRef}
+        >
           <BlogForm handleNewBlog={handleNewBlog} />
         </Togglable>
         <div data-testid="blog-list">

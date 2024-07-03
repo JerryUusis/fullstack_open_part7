@@ -18,3 +18,4 @@
 
 - 7.9: koodin automaattinen muotoilu ✅
 - 7.10: Redux, step1 ✅
+- 7.11: Redux, step2 ✅

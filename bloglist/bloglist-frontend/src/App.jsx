@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import BlogForm from "./components/BlogForm";
-import blogService from "./services/blogs";
+import blogService from "./services/blogsService";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import Blog from "./components/Blog";
@@ -8,28 +8,14 @@ import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./store/notificationSlice";
+import { addBlog, initializeBlogs, setBlogs } from "./store/blogsSlice";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+  const blogs = useSelector((state) => state.blogs);
   const errorMessage = useSelector((state) => state.notification.message);
-
   const dispatch = useDispatch();
   const blogFormRef = useRef();
-
-  // Fetch blogs and save in the blogs state
-  const fetchData = async () => {
-    const request = await blogService.getAll();
-    setBlogs(request);
-  };
-
-  useEffect(() => {
-    try {
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
 
   // Check if user state can be found from local storage
   useEffect(() => {
@@ -60,10 +46,19 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    try {
+      dispatch(initializeBlogs());
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   const handleNewBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility();
-      await blogService.create(newBlog);
+      const response = await blogService.create(newBlog);
+      dispatch(addBlog(response));
 
       dispatch(
         setNotification({
@@ -71,7 +66,6 @@ const App = () => {
           severity: "success",
         })
       );
-      await fetchData();
     } catch (error) {
       console.error(error);
       dispatch(
@@ -87,7 +81,7 @@ const App = () => {
     try {
       await blogService.deleteBlog(id);
       const filteredBlogs = blogs.filter((blog) => blog.id !== id);
-      setBlogs(filteredBlogs);
+      dispatch(setBlogs(filteredBlogs));
     } catch (error) {
       console.error(error);
     }
@@ -136,18 +130,15 @@ const App = () => {
           <BlogForm handleNewBlog={handleNewBlog} />
         </Togglable>
         <div data-testid="blog-list">
-          {blogs
-            // Sort in descending order
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleDelete={handleDelete}
-                handleUpdate={handleUpdate}
-                currentUser={user.username}
-              />
-            ))}
+          {blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              currentUser={user.username}
+            />
+          ))}
         </div>
       </div>
     );

@@ -10,3 +10,4 @@
 
 - 7.4: anekdoottisovellus ja hookit step1 ✅
 - 7.5: anekdoottisovellus ja hookit step2 ✅
+- 7.6: anekdoottisovellus ja hookit step3 ✅

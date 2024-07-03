@@ -9,12 +9,13 @@ export const useField = (type) => {
 
   const reset = () => {
     setValue("");
-  }
+  };
+
+  const inputProps = { onChange, type, value };
 
   return {
-    type,
     value,
-    onChange,
-    reset
+    inputProps,
+    reset,
   };
 };

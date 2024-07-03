@@ -11,3 +11,5 @@
 - 7.4: anekdoottisovellus ja hookit step1 ✅
 - 7.5: anekdoottisovellus ja hookit step2 ✅
 - 7.6: anekdoottisovellus ja hookit step3 ✅
+- 7.7: country hook ✅
+- 7.8: ultimate hooks ✅

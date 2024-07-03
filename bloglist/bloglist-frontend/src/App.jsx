@@ -9,9 +9,11 @@ import Togglable from "./components/Togglable";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./store/notificationSlice";
 import { addBlog, initializeBlogs, setBlogs } from "./store/blogsSlice";
+import { setUser } from "./store/userSlice";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
   const errorMessage = useSelector((state) => state.notification.message);
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ const App = () => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJson) {
       const user = JSON.parse(loggedUserJson);
-      setUser(user);
+      dispatch(setUser(user));
       blogService.setToken(user.token);
     }
   }, []);
@@ -39,7 +41,7 @@ const App = () => {
       const user = await loginService.login({ username, password });
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUser(user);
+      dispatch(setUser(user));
     } catch (error) {
       dispatch(setNotification({ severity: "error", message: "Login failed" }));
       console.error(error);
@@ -66,6 +68,7 @@ const App = () => {
           severity: "success",
         })
       );
+      dispatch(initializeBlogs());
     } catch (error) {
       console.error(error);
       dispatch(
@@ -79,9 +82,16 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
+      const blogToDelete = blogs.find((blog) => blog.id === id);
       await blogService.deleteBlog(id);
       const filteredBlogs = blogs.filter((blog) => blog.id !== id);
       dispatch(setBlogs(filteredBlogs));
+      dispatch(
+        setNotification({
+          message: `removed ${blogToDelete.title}`,
+          severity: "success",
+        })
+      );
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +106,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    dispatch(setUser(null));
     window.localStorage.removeItem("loggedBlogappUser");
   };
 

@@ -5,3 +5,7 @@
 - 7.1: routed anecdotes, step1 ✅
 - 7.2: routed anecdotes, step2 ✅
 - 7.3: routed anecdotes, step3 ✅
+
+## [Exercises 7.4.-7.8.](https://fullstackopen.com/osa7/custom_hookit#tehtavat-7-4-7-8)
+
+- 7.4: anekdoottisovellus ja hookit step1 ✅

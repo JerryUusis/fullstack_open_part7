@@ -24,3 +24,4 @@
 - 7.14: käyttäjien näkymä ✅
 - 7.15: yksittäisen käyttäjän näkymä ✅
 - 7.16: blogin näkymä ✅
+- 7.17: navigointi ✅

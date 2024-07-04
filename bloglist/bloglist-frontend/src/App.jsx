@@ -11,6 +11,7 @@ import Login from "./components/LoginForm";
 import Blogs from "./routes/Blogs";
 import Root from "./routes/Root";
 import UserSingle from "./routes/UserSingle";
+import BlogsSingle from "./routes/BlogsSingle";
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -115,13 +116,12 @@ const App = () => {
         <Route
           path="/blogs"
           element={
-            <Blogs
-              blogFormRef={blogFormRef}
-              handleNewBlog={handleNewBlog}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-            />
+            <Blogs blogFormRef={blogFormRef} handleNewBlog={handleNewBlog} />
           }
+        />
+        <Route
+          path="/blogs/:id"
+          element={<BlogsSingle handleUpdate={handleUpdate} />}
         />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/users/:id" element={<UserSingle />} />

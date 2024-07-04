@@ -26,3 +26,4 @@
 - 7.16: blogin näkymä ✅
 - 7.17: navigointi ✅
 - 7.18: kommentit, step1 ✅
+- 7.19: kommentit, step2 ✅

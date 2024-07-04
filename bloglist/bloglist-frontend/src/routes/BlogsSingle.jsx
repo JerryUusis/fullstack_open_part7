@@ -17,7 +17,7 @@ const BlogsSingle = ({ handleUpdate }) => {
       setComments(response);
     };
     fetchComments();
-  }, []);
+  }, [comments]);
 
   // Filter comments with blog id
   const filterComments = (commentsArray, id) => {
@@ -42,6 +42,15 @@ const BlogsSingle = ({ handleUpdate }) => {
     }
   };
 
+  const handleComment = async (event) => {
+    event.preventDefault();
+    const newComment = event.target.comment.value;
+    event.target.comment.value = "";
+    const newCommentObject = { id: blog.id, comment: newComment };
+    const response = await blogsService.newComment(blog.id, newCommentObject);
+    setComments((previous) => [...previous, response]);
+  };
+
   if (!blog) {
     return null;
   }
@@ -57,6 +66,10 @@ const BlogsSingle = ({ handleUpdate }) => {
         </button>
         <p>added by {blog.author}</p>
         <h3>comments</h3>
+        <form action="submit" onSubmit={handleComment}>
+          <input type="text" name="comment" />
+          <button type="submit">Add comment</button>
+        </form>
         <ul>
           {filterComments(comments, blog.id).map((item) => (
             <li key={item.comment}>{item.comment}</li>

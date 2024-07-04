@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from "react";
-import BlogForm from "./components/BlogForm";
+import { useEffect, useRef } from "react";
 import blogService from "./services/blogsService";
 import loginService from "./services/login";
-import LoginForm from "./components/LoginForm";
-import Blog from "./components/Blog";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./store/notificationSlice";
 import { addBlog, initializeBlogs, setBlogs } from "./store/blogsSlice";
 import { setUser } from "./store/userSlice";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import UsersPage from "./routes/UsersPage";
+import Login from "./components/LoginForm";
+import Blogs from "./routes/Blogs";
+import Root from "./routes/Root";
 
 const App = () => {
-  // const [user, setUser] = useState(null);
   const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
   const errorMessage = useSelector((state) => state.notification.message);
   const dispatch = useDispatch();
   const blogFormRef = useRef();
+  const navigate = useNavigate();
 
   // Check if user state can be found from local storage
   useEffect(() => {
@@ -42,19 +42,12 @@ const App = () => {
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       dispatch(setUser(user));
+      navigate("/blogs");
     } catch (error) {
       dispatch(setNotification({ severity: "error", message: "Login failed" }));
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    try {
-      dispatch(initializeBlogs());
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
 
   const handleNewBlog = async (newBlog) => {
     try {
@@ -108,51 +101,31 @@ const App = () => {
   const handleLogout = () => {
     dispatch(setUser(null));
     window.localStorage.removeItem("loggedBlogappUser");
+    navigate("/");
   };
 
-  if (user === null) {
-    return (
-      <>
-        <h2>Log in to application</h2>
-        <Notification />
-        <LoginForm handleLogin={handleLogin} />
-      </>
-    );
-  }
-
-  if (user) {
-    return (
-      <div>
-        <div>
-          <h2 data-testid="blogs-header">blogs</h2>
-          <Notification />
-        </div>
-        <div>
-          {user.username} logged in
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-        <Togglable
-          data-testid="blog-form-togglable"
-          openLabel="new blog"
-          closeLabel="cancel"
-          ref={blogFormRef}
-        >
-          <BlogForm handleNewBlog={handleNewBlog} />
-        </Togglable>
-        <div data-testid="blog-list">
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={<Root handleLogout={handleLogout} user={user} />}
+      >
+        <Route path="/" element={<Login handleLogin={handleLogin} />} />
+        <Route
+          path="/blogs"
+          element={
+            <Blogs
+              blogFormRef={blogFormRef}
+              handleNewBlog={handleNewBlog}
               handleDelete={handleDelete}
               handleUpdate={handleUpdate}
-              currentUser={user.username}
             />
-          ))}
-        </div>
-      </div>
-    );
-  }
+          }
+        />
+        <Route path="/users" element={<UsersPage />} />
+      </Route>
+    </Routes>
+  );
 };
 
 export default App;

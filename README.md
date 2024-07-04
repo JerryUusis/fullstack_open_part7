@@ -28,4 +28,4 @@
 - 7.18: kommentit, step1 ✅
 - 7.19: kommentit, step2 ✅
 - 7.20: tyylit, step 1 ❌
-- 7.20: tyylit, step 2 ❌
+- 7.21: tyylit, step 2 ❌

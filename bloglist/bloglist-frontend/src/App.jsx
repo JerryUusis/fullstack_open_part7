@@ -10,6 +10,7 @@ import UsersPage from "./routes/UsersPage";
 import Login from "./components/LoginForm";
 import Blogs from "./routes/Blogs";
 import Root from "./routes/Root";
+import UserSingle from "./routes/UserSingle";
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -123,6 +124,7 @@ const App = () => {
           }
         />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/users/:id" element={<UserSingle />} />
       </Route>
     </Routes>
   );

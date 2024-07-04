@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeUserList } from "../store/userListSlice";
+import { Link } from "react-router-dom";
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ const UsersPage = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.username}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.username}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}

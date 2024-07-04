@@ -22,3 +22,4 @@
 - 7.12: Redux, step3 ✅
 - 7.13: Redux, step4 ✅
 - 7.14: käyttäjien näkymä ✅
+- 7.15: yksittäisen käyttäjän näkymä ✅

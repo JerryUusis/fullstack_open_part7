@@ -82,4 +82,18 @@ blogRouter.put("/:id", async (request, response) => {
   return response.status(404).json({ error: "not found" });
 });
 
+const commentArray = [];
+
+blogRouter.get("/:id/comments", async (request, response) => {
+  response.status(200).json(commentArray);
+});
+
+blogRouter.post("/:id/comments", async (request, response) => {
+  const { comment } = request.body;
+  const {id} = request.params;
+  const newComment = {id, comment}
+  commentArray.push(newComment);
+  response.status(200).json(request.body);
+});
+
 module.exports = blogRouter;

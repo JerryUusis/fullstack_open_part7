@@ -7,7 +7,7 @@ import { addBlog, initializeBlogs, setBlogs } from "./store/blogsSlice";
 import { setUser } from "./store/userSlice";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UsersPage from "./routes/UsersPage";
-import Login from "./components/LoginForm";
+import Login from "./routes/Login"
 import Blogs from "./routes/Blogs";
 import Root from "./routes/Root";
 import UserSingle from "./routes/UserSingle";

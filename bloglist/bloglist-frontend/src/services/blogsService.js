@@ -53,4 +53,14 @@ const deleteBlog = async (id) => {
   }
 };
 
-export default { getAll, create, setToken, update, deleteBlog };
+const getComments = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/${id}/comments`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export default { getAll, create, setToken, update, deleteBlog, getComments };

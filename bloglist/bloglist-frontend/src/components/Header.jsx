@@ -20,7 +20,7 @@ const Header = ({ handleLogout }) => {
       </div>
 
       <div>
-        <h2 data-testid="blogs-header">blog App</h2>
+        <h2 data-testid="blogs-header">blog app</h2>
         <Notification />
       </div>
     </div>
